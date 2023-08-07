@@ -27,7 +27,7 @@ export const routes = [
         title,
         description,
         completed_at: null,
-        created_at: date,
+        created_at: date.format('DD/MM/YYYY hh:mm:ss'),
         updated_at: null
       }
 
@@ -46,7 +46,7 @@ export const routes = [
       database.update('tasks', id, {
         title,
         description,
-        updated_at: date
+        updated_at: date.format('DD/MM/YYYY hh:mm:ss')
       })
 
       return res.writeHead(204).end()
@@ -69,7 +69,7 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params
 
-      database.complete('tasks', id, date)      
+      database.complete('tasks', id, date.format('DD/MM/YYYY hh:mm:ss'))      
 
       return res.end()
     }
