@@ -1,23 +1,27 @@
 import http from 'node:http'
 import {routes } from './routes.js'
+import { json } from './middleware/json.js'
 
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const { method, url } = req
+
+  await json(req, res)
   
   const route = routes.find((route) => {
-    return route.method === method && route.path === url
+    return route.method === method && route.path.test(url)
   })
 
   if (route) {
+    const routeParams = req.url.match(route.path)
+    console.log(routeParams)
+
+    req.params = { ...routeParams.groups }
+
     return route.handler(req, res)
   }
 
-  console.log(route)
-
-  // return res.writeHead(404).end()
-
-  return res.end('ola')
+  return res.writeHead(404).end()
 })
 
 server.listen(3333, () => {
